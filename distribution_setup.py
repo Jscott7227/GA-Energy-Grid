@@ -1,6 +1,8 @@
 import random
 import numpy as np
 
+
+#TODO update with realisitc probs 
 CONFIG = {
     "grid_size": (50, 50),
 

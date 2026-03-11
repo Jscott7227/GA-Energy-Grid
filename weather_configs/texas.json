@@ -1,0 +1,35 @@
+{
+  "region": "Texas",
+
+  "seasonal_event_probs": {
+
+    "winter": {
+      "ice_storm": 0.05,
+      "cold_snap": 0.05
+    },
+
+    "spring": {
+      "storm": 0.12,
+      "tornado": 0.08
+    },
+
+    "summer": {
+      "heatwave": 0.20,
+      "hurricane": 0.05
+    },
+
+    "fall": {
+      "storm": 0.08,
+      "hurricane": 0.04
+    }
+  },
+
+  "edge_failure_probability": {
+    "storm": 0.03,
+    "heatwave": 0.05,
+    "ice_storm": 0.08,
+    "cold_snap": 0.04,
+    "tornado": 0.15,
+    "hurricane": 0.20
+  }
+}

@@ -4,7 +4,7 @@ import math
 from node_generation import NodeFactory
 from distribution_setup import sample_distance
 
-
+#TODO build realistic grid dist graph
 class GridEnvironment:
 
     def __init__(self, config):

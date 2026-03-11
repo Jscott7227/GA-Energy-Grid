@@ -1,0 +1,33 @@
+{
+  "region": "New England",
+
+  "seasonal_event_probs": {
+
+    "winter": {
+      "snowstorm": 0.20,
+      "blizzard": 0.10
+    },
+
+    "spring": {
+      "storm": 0.10
+    },
+
+    "summer": {
+      "heatwave": 0.05,
+      "storm": 0.08
+    },
+
+    "fall": {
+      "storm": 0.12,
+      "hurricane": 0.03
+    }
+  },
+
+  "edge_failure_probability": {
+    "storm": 0.03,
+    "heatwave": 0.02,
+    "snowstorm": 0.06,
+    "blizzard": 0.10,
+    "hurricane": 0.15
+  }
+}
