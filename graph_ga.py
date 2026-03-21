@@ -130,7 +130,7 @@ class GraphGA:
         child._apply_edges()
         return child
     
-    #TODO add line logic to mutation
+    # Random mutation with chance to add, remove and update nodes
     def mutate(self, candidate, mutation_rate=0.05):
         nodes = list(candidate.base_graph.nodes)
         N = len(nodes)

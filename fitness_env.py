@@ -3,14 +3,13 @@ import random
 import json
 
 class GridFitnessEnv:
-    def __init__(self, weather_config_path, cyber_model, years=5, n_scenarios=100, weeks_per_year=52, rng=None):
+    def __init__(self, weather_config_path, cyber_model, years=5, weeks_per_year=52, rng=None):
         # Load weather configuration from JSON
         with open(weather_config_path, "r") as f:
             self.weather_config = json.load(f)
             
         self.cyber = cyber_model
         self.years = years
-        self.n_scenarios = n_scenarios
         self.weeks_per_year = weeks_per_year
         self.rng = rng or random.Random()
 
@@ -26,25 +25,21 @@ class GridFitnessEnv:
         
     def _generate_weather_scenarios(self):
         scenarios = []
-
-        for _ in range(self.n_scenarios):
-            scenario = []
-            for year in range(self.years):
-                for week in range(self.weeks_per_year):
-                    season = self._get_season(week)
-                    event = self._sample_event(season)
-                    severity = None
-                    if event is not None:
-                        severity = self._sample_severity(season, event)
-                    
-                    scenario.append({
-                        "year": year,
-                        "week": week,
-                        "season": season,
-                        "event": event,
-                        "severity": severity
-                    })
-            scenarios.append(scenario)
+        for year in range(self.years):
+            for week in range(self.weeks_per_year):
+                season = self._get_season(week)
+                event = self._sample_event(season)
+                severity = None
+                if event is not None:
+                    severity = self._sample_severity(season, event)
+                
+                scenarios.append({
+                    "year": year,
+                    "week": week,
+                    "season": season,
+                    "event": event,
+                    "severity": severity
+                })
         return scenarios
     
     def _get_season(self, week):
@@ -192,38 +187,39 @@ class GridFitnessEnv:
         G_sim = G.copy()
         total_score = 0
 
-        for step in scenario:
-            event = step["event"]
-            severity = step['severity']
-            #Percentage of power generation lost per storm severity
-            alpha = 0.01
-            
-            # Apply weather failures
+        event = scenario["event"]
+        severity = scenario['severity']
+        #Percentage of power generation lost per storm severity
+        alpha = 0.01
+        
+        # Apply weather failures
+        if severity is not None:
             self._weather_propigation(G_sim, severity, alpha)
 
-            #TODO Propigation to nodes in a realistic manner
-            # Apply cyber attack failures
-            if self.cyber.attack_occurs():
-                for edge in list(G_sim.edges):
-                    if self.rng.random() < self.cyber.edge_failure_probability:
-                        G_sim.remove_edge(*edge)
 
-            # Evaluate power availability
-            total_score += self._evaluate_power(G_sim)
 
-        return total_score / len(scenario)
+        #TODO Propigation to nodes in a realistic manner
+        # Apply cyber attack failures
+        if self.cyber.attack_occurs():
+            for edge in list(G_sim.edges):
+                if self.rng.random() < self.cyber.edge_failure_probability:
+                    G_sim.remove_edge(*edge)
+
+        # Evaluate power availability
+        total_score = self._evaluate_power(G_sim)
+
+        return total_score
     
+    #TODO Currently treats each week independently adjust if wanting a time based scenario
     def run_simulation(self, G):
         scores = [self.run_scenario(G, scenario) for scenario in self.weather_scenarios]
         return sum(scores) / len(scores)
     
-    #TODO add power Reqs from and for each node
     def _evaluate_power(self, G):
         
         node_type_weights = {
-            "essential": 0.15,
-            "generator": 0.10,
-            "residential": 0.45,
+            "essential": 0.5,
+            "residential": 0.2,
             "commercial": 0.30
         }
         
@@ -232,23 +228,21 @@ class GridFitnessEnv:
         
         for node, data in G.nodes(data=True):
             node_type = data.get("type")
-
             if node_type in type_totals:
                 type_totals[node_type] += 1
                 if data.get("served", False):
                     type_served[node_type] += 1
-                    
+        
+        score = 0.0      
         for node_type, weight in node_type_weights.items():
             total = type_totals[node_type]
-
             if total > 0:
                 served_fraction = type_served[node_type] / total
             else:
                 served_fraction = 0.0
-
             score += weight * served_fraction
-        score = 0.0
-    
+        
+        # Percentage of total system functionality satisfied, weighted by importance
         return score
     
     #TODO Calc cost of lines
