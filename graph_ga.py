@@ -1,6 +1,7 @@
 import numpy as np
 import networkx as nx
 import math
+import matplotlib.pyplot as plt
 
 EDGE_TYPES = {
         "normal": {
@@ -217,9 +218,35 @@ class GraphGA:
                     
         candidate.edge_set = new_edges
         candidate._apply_edges()
+        
+    
+    def plot_graph(self, graph, title="Graph"):
+        pos = nx.get_node_attributes(graph, "pos")
+
+        color_map = {
+            "residential": "blue",
+            "commercial": "orange",
+            "essential": "red",
+            "generator": "green"
+        }
+
+        node_colors = [
+            color_map[graph.nodes[n]["type"]]
+            for n in graph.nodes
+        ]
+
+        plt.figure()
+        nx.draw(
+            graph,
+            pos,
+            node_color=node_colors,
+            with_labels=False
+        )
+        plt.title(title)
+        plt.show()
             
     def run(self, fitness_env, generations=50, edge_prob=0.1,
-            mutation_rate=0.05, top_k=3, verbose=True):
+            mutation_rate=0.05, top_k=3, verbose=1):
         
         self.initialize_population(edge_prob=edge_prob)
         fitness_env.generate_weather_scenarios()
@@ -245,5 +272,8 @@ class GraphGA:
             if verbose:
                 best = max(self.population, key=lambda c: c.fitness)
                 print(f"Gen {gen+1}: Best fitness = {best.fitness:.4f}")
+                
+            if verbose >= 2:
+                self.plot_graph(best.G, title=f"Generation {gen} Best Graph")
 
         return max(self.population, key=lambda c: c.fitness)

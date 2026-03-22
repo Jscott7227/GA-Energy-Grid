@@ -24,7 +24,6 @@ class GridFitnessEnv:
         # Generate all weather scenarios each step of the genetic algorithm
         self.weather_scenarios = []
     
-    #TODO Possilby add Monte Carlo Sampling of multiple scenarios per week per generation
     def generate_weather_scenarios(self):
         trajectories = []
         for _ in range(self.mc_trajectories):
@@ -88,6 +87,7 @@ class GridFitnessEnv:
     
     #TODO currently requires one generator per sub-graph
     #TODO Set lenght of blackout / node trims / node disconnections
+    #TODO Check for reliability bug 
     def _weather_propigation(self, G, severity, alpha=0.01, super_failure = 10):
         generation_scale = (1 - alpha * severity)
         #TODO grab from config
@@ -225,6 +225,7 @@ class GridFitnessEnv:
             #print(f"Finished Trajectory with reliability_score: {score}")
         return sum(trajectory_scores) / len(trajectory_scores)
     
+    #TODO Check for possible power eval bug
     def _evaluate_power(self, G):
         
         node_type_weights = {

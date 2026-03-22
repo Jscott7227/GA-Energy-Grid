@@ -37,7 +37,7 @@ nx.draw(
     graph,
     pos,
     node_color=node_colors,
-    with_labels=True
+    with_labels=False
 )
 
 plt.title("Generated Grid Node Distribution (Colored by Type)")
@@ -45,14 +45,15 @@ plt.show()
 
 cyber_model = CyberAttackModel()
 env = GridFitnessEnv("weather_configs/new_england.json", cyber_model, rng=random.Random(42))
-ga = GraphGA(graph, population_size=100, rng=np.random.default_rng(42))
+ga = GraphGA(graph, population_size=10, rng=np.random.default_rng(42))
 
 best_candidate = ga.run(
     env,
     generations=100,
     edge_prob=0.2,
     mutation_rate=0.05,
-    top_k=3
+    top_k=3,
+    verbose=2
 )
 
 print("Best candidate fitness:", best_candidate.fitness)

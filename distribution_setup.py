@@ -4,7 +4,7 @@ import numpy as np
 
 #TODO update with realisitc probs 
 CONFIG = {
-    "grid_size": (50, 50),
+    "grid_size": (500, 500),
 
     "node_count": 100,
 
@@ -16,22 +16,22 @@ CONFIG = {
     },
 
     "spatial_bias": {
-        "residential": {"attract_prob": 0.7, "radius": 8, "min_dist": 1.5},
-        "commercial": {"attract_prob": 0.6, "radius": 10, "min_dist": 2},
-        "essential": {"attract_prob": 0.5, "radius": 12, "min_dist": 3},
-        "generator": {"attract_prob": 0.2, "radius": 15, "min_dist": 5},
+        "residential": {"attract_prob": 0.7, "radius": 80, "min_dist": 1.5},
+        "commercial": {"attract_prob": 0.6, "radius": 100, "min_dist": 2},
+        "essential": {"attract_prob": 0.5, "radius": 120, "min_dist": 3},
+        "generator": {"attract_prob": 0.0, "radius": 150, "min_dist": 5},
     },
 
     "power_generation_distribution": {
         "type": "normal",
-        "mean": 100,
+        "mean": 1000,
         "std": 20
     },
 
     "power_requirement_distribution": {
-        "essential": {"mean": 60, "std": 10},
-        "residential": {"mean": 30, "std": 5},
-        "commercial": {"mean": 50, "std": 10},
+        "essential": {"mean": 100, "std": 10},
+        "residential": {"mean": 10, "std": 5},
+        "commercial": {"mean": 100, "std": 10},
         "generator": {"mean": 5, "std": 2}
     }
 }
