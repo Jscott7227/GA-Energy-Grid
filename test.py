@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import io
 from PIL import Image
 import networkx as nx
+from graph_ga import GraphGA
+from fitness_env import GridFitnessEnv
+from cyber_model import CyberAttackModel
 
 env = GridEnvironment(CONFIG)
 graph = env.generate()
@@ -38,6 +41,17 @@ nx.draw(
 plt.title("Generated Grid Node Distribution (Colored by Type)")
 plt.show()
 
+cyber_model = CyberAttackModel()
+env = GridFitnessEnv("weather_configs/new_england.json", cyber_model)
+ga = GraphGA(graph, population_size=100)
 
+best_candidate = ga.run(
+    env,
+    generations=50,
+    edge_prob=0.2,
+    mutation_rate=0.05
+)
+
+print("Best candidate fitness:", best_candidate.fitness)
 #for n, data in graph.nodes(data=True):
     #print(n, data)

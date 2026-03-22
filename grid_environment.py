@@ -33,7 +33,7 @@ class GridEnvironment:
 
         return self.graph
     
-    
+    #TODO Polish Distance generation
     def _generate_position(self, node_type):
         """
         Assign each node a position using placememt distrobutions

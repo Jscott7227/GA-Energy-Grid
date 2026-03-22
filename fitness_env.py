@@ -20,10 +20,11 @@ class GridFitnessEnv:
             "residential": 1.0
         }
 
-        # Generate all weather scenarios at initialization for consitant eval accross population step
-        self.weather_scenarios = self._generate_weather_scenarios()
-        
-    def _generate_weather_scenarios(self):
+        # Generate all weather scenarios each step of the genetic algorithm
+        self.weather_scenarios = []
+    
+    #TODO Possilby add Monte Carlo Sampling of multiple scenarios per week per generation
+    def generate_weather_scenarios(self):
         scenarios = []
         for year in range(self.years):
             for week in range(self.weeks_per_year):
@@ -40,7 +41,7 @@ class GridFitnessEnv:
                     "event": event,
                     "severity": severity
                 })
-        return scenarios
+        self.weather_scenarios = scenarios
     
     def _get_season(self, week):
         if week < 13:
@@ -247,13 +248,27 @@ class GridFitnessEnv:
     
     #TODO Calc cost of lines
     def infrastructure_cost(self, G):
-        # Simple cost: 1 per edge
-        edge_cost = len(G.edges)
-        return edge_cost
+        total_cost = 0.0
+
+        for _, _, data in G.edges(data=True):
+            total_cost += data.get("cost", 0.0)
+
+        return total_cost
     
+    #TODO determine good fitness score scale
     def evaluate(self, G):
         reliability_score = self.run_simulation(G)
-        cost_penalty = self.infrastructure_cost(G)
-        fitness = reliability_score - cost_penalty
+        raw_cost = self.infrastructure_cost(G)
+        n = G.number_of_nodes()
+
+        max_cost_per_edge = 50
+        max_possible_edges = n * (n - 1) / 2 if n > 1 else 1
+        max_possible_cost = max_possible_edges * max_cost_per_edge
+
+        normalized_cost = raw_cost / max_possible_cost if max_possible_cost > 0 else 0.0
+        normalized_cost = max(0.0, min(1.0, normalized_cost))
+
+        cost_weight = 1
+        fitness = reliability_score - normalized_cost * cost_weight
         return fitness
     

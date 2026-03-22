@@ -23,21 +23,19 @@ class GraphCandidate:
         self.fitness = None
         
      
-    # TODO build edge generation logic with line data in mind
     # Currently Random
     def generate_edges(self, edge_prob=0.1):
         nodes = list(self.base_graph.nodes)
         N = len(nodes)
         self.edge_set.clear()
         
-        #TODO Send to a config file and get realistic numbers
         edge_types = EDGE_TYPES
         
         for i in range(N):
             for j in range(i + 1, N):
                 if self.rng.random() < edge_prob:
-                    x1, y1 = self.positions[i]
-                    x2, y2 = self.positions[j]
+                    x1, y1 = self._get_position(i)
+                    x2, y2 = self._get_position(j)
                     dist = math.hypot(x2 - x1, y2 - y1)
 
                     edge_type = self._choose_edge_type(dist)
@@ -48,16 +46,14 @@ class GraphCandidate:
                         cost = dist * params["cost_per_distance"]
 
                         self.edge_set.add((
-                            i,
-                            j,
-                            {
-                                "type": edge_type,
-                                "distance": dist,
-                                "cost": cost,
-                                "cost_per_distance": params["cost_per_distance"],
-                                "max_distance": params["max_distance"]
-                            }
-                        ))
+                        i,
+                        j,
+                        edge_type,
+                        dist,
+                        cost,
+                        params["cost_per_distance"],
+                        params["max_distance"]
+                    ))
 
         self._apply_edges()
 
@@ -73,10 +69,22 @@ class GraphCandidate:
     
     def _apply_edges(self):
         self.G.clear_edges()
-        self.G.add_edges_from(self.edge_set)
-        
-    def evaluate_fitness(self, fitness_fn):
-        self.fitness = fitness_fn(self.G)
+        for i, j, edge_type, dist, cost, cpd, max_dist in self.edge_set:
+            self.G.add_edge(
+                i,
+                j,
+                type=edge_type,
+                distance=dist,
+                cost=cost,
+                cost_per_distance=cpd,
+                max_distance=max_dist
+            )
+
+    def _get_position(self, node_id):
+        return self.base_graph.nodes[node_id]["pos"]
+    
+    def evaluate_fitness(self, fitness_env):
+        self.fitness = fitness_env.evaluate(self.G)
         return self.fitness
     
 class GraphGA:
@@ -118,11 +126,14 @@ class GraphGA:
         seen_pairs = set()
         child_edges = set()
         
-        for (i, j, attr) in child_edges_list:
+        for edge in child_edges_list:
+            i, j, edge_type, dist, cost, cpd, max_dist = edge
+
             pair = (i, j)
+
             if pair not in seen_pairs:
                 seen_pairs.add(pair)
-                child_edges.add((i, j, attr))
+                child_edges.add((i, j, edge_type, dist, cost, cpd, max_dist))
         
         child = GraphCandidate(parent1.base_graph, rng=self.rng)
         child.edge_set = child_edges
@@ -136,75 +147,84 @@ class GraphGA:
         N = len(nodes)
         edge_types = EDGE_TYPES
         new_edges = set(candidate.edge_set)
+        existing_edges = list(new_edges)
         
-        for i in range(N):
-            for j in range(i + 1, N):
-                if self.rng.random() < mutation_rate:
-                    existing_edge = None
-                    for e in new_edges:
-                        if e[0] == i and e[1] == j:
-                            existing_edge = e
-                            break
-                    if existing_edge:
-                        new_edges.remove(existing_edge)
-                        
-                    else:
-                        x1, y1 = candidate.positions[i]
-                        x2, y2 = candidate.positions[j]
-                        dist = math.hypot(x2 - x1, y2 - y1)
-                        edge_type = candidate._choose_edge_type(dist)
-                        params = edge_types[edge_type]
-                        if dist <= params["max_distance"]:
-                            cost = dist * params["cost_per_distance"]
-                            new_edges.add((
-                                i,
-                                j,
-                                {
-                                    "type": edge_type,
-                                    "distance": dist,
-                                    "cost": cost,
-                                    "cost_per_distance": params["cost_per_distance"],
-                                    "max_distance": params["max_distance"]
-                                }
-                            ))
-                        
-                    if existing_edge and self.rng.random() < 0.3:
-                        i0, j0, attr = existing_edge
+        for edge in existing_edges:
+            if self.rng.random() < mutation_rate * 0.25:
+                i, j, edge_type, dist, cost, cpd, max_dist = edge
 
-                        new_type = (
-                            "high_voltage"
-                            if attr["type"] == "normal"
-                            else "normal"
-                        )
+                new_type = (
+                    "high_voltage"
+                    if edge_type == "normal"
+                    else "normal"
+                )
 
-                        x1, y1 = candidate.positions[i0]
-                        x2, y2 = candidate.positions[j0]
-                        dist = math.hypot(x2 - x1, y2 - y1)
+                x1, y1 = candidate.base_graph.nodes[i]["pos"]
+                x2, y2 = candidate.base_graph.nodes[j]["pos"]
+                dist = math.hypot(x2 - x1, y2 - y1)
 
-                        params = edge_types[new_type]
+                params = edge_types[new_type]
 
-                        if dist <= params["max_distance"]:
-                            cost = dist * params["cost_per_distance"]
-                            new_edges.add((
-                                i0,
-                                j0,
-                                {
-                                    "type": new_type,
-                                    "distance": dist,
-                                    "cost": cost,
-                                    "cost_per_distance": params["cost_per_distance"],
-                                    "max_distance": params["max_distance"]
-                                }
-                            ))
+                if dist <= params["max_distance"]:
+                    cost = dist * params["cost_per_distance"]
+
+                    new_edges.discard(edge)
+                    new_edges.add((
+                        i,
+                        j,
+                        new_type,
+                        dist,
+                        cost,
+                        params["cost_per_distance"],
+                        params["max_distance"]
+                    ))
+        for edge in list(new_edges):
+            if self.rng.random() < mutation_rate * 0.5:
+                new_edges.discard(edge)
+                
+        num_candidates = int(N * mutation_rate)
+        edge_pairs = {(e[0], e[1]) for e in new_edges}
+        for _ in range(num_candidates):
+            i, j = self.rng.integers(0, N, size=2)
+            if i == j:
+                continue
+
+            pair = (min(i, j), max(i, j))
+
+            # Skip if edge already exists
+            if pair in edge_pairs:
+                continue
+
+            x1, y1 = candidate.base_graph.nodes[pair[0]]["pos"]
+            x2, y2 = candidate.base_graph.nodes[pair[1]]["pos"]
+            dist = math.hypot(x2 - x1, y2 - y1)
+
+            edge_type = candidate._choose_edge_type(dist)
+            params = edge_types[edge_type]
+
+            if dist <= params["max_distance"]:
+                cost = dist * params["cost_per_distance"]
+
+                new_edges.add((
+                    pair[0],
+                    pair[1],
+                    edge_type,
+                    dist,
+                    cost,
+                    params["cost_per_distance"],
+                    params["max_distance"]
+                ))
+                    
         candidate.edge_set = new_edges
         candidate._apply_edges()
             
-    def run(self, fitness_fn, generations=50, edge_prob=0.1,
+    def run(self, fitness_env, generations=50, edge_prob=0.1,
             mutation_rate=0.05, top_k=3, verbose=True):
         
         self.initialize_population(edge_prob=edge_prob)
+        fitness_env.generate_weather_scenarios()
         for c in self.population:
-            c.evaluate_fitness(fitness_fn)
+            c.evaluate_fitness(fitness_env)
 
         for gen in range(generations):
             new_population = []
@@ -216,8 +236,12 @@ class GraphGA:
                 self.mutate(child, mutation_rate=mutation_rate)
                 new_population.append(child)
                 
+                
             self.population = new_population
-
+            fitness_env.generate_weather_scenarios()
+            for c in self.population:
+                c.evaluate_fitness(fitness_env)
+                
             if verbose:
                 best = max(self.population, key=lambda c: c.fitness)
                 print(f"Gen {gen+1}: Best fitness = {best.fitness:.4f}")
