@@ -3,7 +3,7 @@ import random
 import json
 
 class GridFitnessEnv:
-    def __init__(self, weather_config_path, cyber_model, years=5, weeks_per_year=52, rng=None):
+    def __init__(self, weather_config_path, cyber_model, mc_trajectories=5, years=1, weeks_per_year=52, rng=None):
         # Load weather configuration from JSON
         with open(weather_config_path, "r") as f:
             self.weather_config = json.load(f)
@@ -12,6 +12,7 @@ class GridFitnessEnv:
         self.years = years
         self.weeks_per_year = weeks_per_year
         self.rng = rng or random.Random()
+        self.mc_trajectories = mc_trajectories
 
         # Node importance weights
         self.node_weights = {
@@ -25,23 +26,26 @@ class GridFitnessEnv:
     
     #TODO Possilby add Monte Carlo Sampling of multiple scenarios per week per generation
     def generate_weather_scenarios(self):
-        scenarios = []
-        for year in range(self.years):
-            for week in range(self.weeks_per_year):
-                season = self._get_season(week)
-                event = self._sample_event(season)
-                severity = None
-                if event is not None:
-                    severity = self._sample_severity(season, event)
-                
-                scenarios.append({
-                    "year": year,
-                    "week": week,
-                    "season": season,
-                    "event": event,
-                    "severity": severity
-                })
-        self.weather_scenarios = scenarios
+        trajectories = []
+        for _ in range(self.mc_trajectories):
+            scenarios = []
+            for year in range(self.years):
+                for week in range(self.weeks_per_year):
+                    season = self._get_season(week)
+                    event = self._sample_event(season)
+                    severity = None
+                    if event is not None:
+                        severity = self._sample_severity(season, event)
+                    
+                    scenarios.append({
+                        "year": year,
+                        "week": week,
+                        "season": season,
+                        "event": event,
+                        "severity": severity
+                    })
+            trajectories.append(scenarios)
+        self.weather_scenarios = trajectories
     
     def _get_season(self, week):
         if week < 13:
@@ -183,38 +187,43 @@ class GridFitnessEnv:
             for n in component:
                 if G.nodes[n].get("type") != "generator":
                     G.nodes[n]["served"] = has_generator
+    
+    #Alpha 
+    #Percentage of power generation lost per storm severity
+    def run_trajectory(self, G, trajectory, alpha = 0.01):
+    
+        weekly_scores = []
         
-    def run_scenario(self, G, scenario):
-        G_sim = G.copy()
-        total_score = 0
-
-        event = scenario["event"]
-        severity = scenario['severity']
-        #Percentage of power generation lost per storm severity
-        alpha = 0.01
+        for scenario in trajectory:
+            G_sim = G.copy()
+            event = scenario["event"]
+            severity = scenario['severity']
         
-        # Apply weather failures
-        if severity is not None:
-            self._weather_propigation(G_sim, severity, alpha)
+            # Apply weather failures
+            if severity is not None:
+                self._weather_propigation(G_sim, severity, alpha)
 
+            #TODO Propigation to nodes in a realistic manner
+            # Apply cyber attack failures
+            # if self.cyber.attack_occurs():
+            #     for edge in list(G_sim.edges):
+            #         if self.rng.random() < self.cyber.edge_failure_probability:
+            #             G_sim.remove_edge(*edge)
 
-
-        #TODO Propigation to nodes in a realistic manner
-        # Apply cyber attack failures
-        if self.cyber.attack_occurs():
-            for edge in list(G_sim.edges):
-                if self.rng.random() < self.cyber.edge_failure_probability:
-                    G_sim.remove_edge(*edge)
-
-        # Evaluate power availability
-        total_score = self._evaluate_power(G_sim)
-
-        return total_score
+            # Evaluate power availability
+            score = self._evaluate_power(G_sim)
+            weekly_scores.append(score)
+        return sum(weekly_scores) / len(weekly_scores)
     
     #TODO Currently treats each week independently adjust if wanting a time based scenario
     def run_simulation(self, G):
-        scores = [self.run_scenario(G, scenario) for scenario in self.weather_scenarios]
-        return sum(scores) / len(scores)
+        trajectory_scores = []
+
+        for trajectory in self.weather_scenarios:
+            score = self.run_trajectory(G, trajectory)
+            trajectory_scores.append(score)
+            #print(f"Finished Trajectory with reliability_score: {score}")
+        return sum(trajectory_scores) / len(trajectory_scores)
     
     def _evaluate_power(self, G):
         
