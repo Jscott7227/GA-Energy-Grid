@@ -35,6 +35,15 @@ class GraphCandidate:
         for i in range(N):
             for j in range(i + 1, N):
                 if self.rng.random() < edge_prob:
+                    
+                    type_i = self.G.nodes[i]["type"]
+                    type_j = self.G.nodes[j]["type"]
+                    if (
+                        ("generator" in (type_i, type_j)) and
+                        ("substation" not in (type_i, type_j))
+                    ):
+                        continue
+                    
                     x1, y1 = self._get_position(i)
                     x2, y2 = self._get_position(j)
                     dist = math.hypot(x2 - x1, y2 - y1)
@@ -180,7 +189,7 @@ class GraphGA:
                         params["max_distance"]
                     ))
         for edge in list(new_edges):
-            if self.rng.random() < mutation_rate * 0.5:
+            if self.rng.random() < mutation_rate:
                 new_edges.discard(edge)
                 
         num_candidates = int(N * mutation_rate)
@@ -189,7 +198,15 @@ class GraphGA:
             i, j = self.rng.integers(0, N, size=2)
             if i == j:
                 continue
-
+            
+            type_i = self.base_graph.nodes[i]["type"]
+            type_j = self.base_graph.nodes[j]["type"]
+            if (
+                ("generator" in (type_i, type_j)) and
+                ("substation" not in (type_i, type_j))
+            ):
+                continue
+            
             pair = (min(i, j), max(i, j))
 
             # Skip if edge already exists
@@ -227,7 +244,8 @@ class GraphGA:
             "residential": "blue",
             "commercial": "orange",
             "essential": "red",
-            "generator": "green"
+            "generator": "green",
+            "substation": "purple"
         }
 
         node_colors = [
@@ -235,7 +253,7 @@ class GraphGA:
             for n in graph.nodes
         ]
 
-        plt.figure()
+        plt.clf()  # clear previous frame
         nx.draw(
             graph,
             pos,
@@ -243,7 +261,8 @@ class GraphGA:
             with_labels=False
         )
         plt.title(title)
-        plt.show()
+
+        plt.pause(1)
             
     def run(self, fitness_env, generations=50, edge_prob=0.1,
             mutation_rate=0.05, top_k=3, verbose=1):

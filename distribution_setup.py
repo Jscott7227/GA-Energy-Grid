@@ -11,8 +11,9 @@ CONFIG = {
     "node_type_percentages": {
         "essential": 0.15,
         "generator": 0.10,
-        "residential": 0.45,
-        "commercial": 0.30
+        "residential": 0.40,
+        "commercial": 0.25,
+        "substation": 0.10
     },
 
     "spatial_bias": {
@@ -20,6 +21,7 @@ CONFIG = {
         "commercial": {"attract_prob": 0.6, "radius": 100, "min_dist": 2},
         "essential": {"attract_prob": 0.5, "radius": 120, "min_dist": 3},
         "generator": {"attract_prob": 0.0, "radius": 150, "min_dist": 5},
+        "substation": {"attract_prob": 0.0, "radius": 150, "min_dist": 5}
     },
 
     "power_generation_distribution": {
@@ -32,7 +34,8 @@ CONFIG = {
         "essential": {"mean": 100, "std": 10},
         "residential": {"mean": 10, "std": 5},
         "commercial": {"mean": 100, "std": 10},
-        "generator": {"mean": 5, "std": 2}
+        "generator": {"mean": 5, "std": 2},
+        "substation": {"mean": 5, "std": 2}
     }
 }
 

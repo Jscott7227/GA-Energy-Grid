@@ -24,7 +24,8 @@ color_map = {
     "residential": "blue",
     "commercial": "orange",
     "essential": "red",
-    "generator": "green"
+    "generator": "green",
+    "substation": "purple"
 }
 
 
