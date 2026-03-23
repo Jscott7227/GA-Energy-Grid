@@ -252,16 +252,49 @@ class GraphGA:
             color_map[graph.nodes[n]["type"]]
             for n in graph.nodes
         ]
+        
+        node_sizes = [
+            200 if graph.nodes[n].get("served") else 100
+            for n in graph.nodes
+        ]
 
-        plt.clf()  # clear previous frame
-        nx.draw(
+        normal_edges = []
+        high_voltage_edges = []
+
+        for u, v, data in graph.edges(data=True):
+            e_type = data.get("type", "normal")
+            if e_type == "high_voltage":
+                high_voltage_edges.append((u, v))
+            else:
+                normal_edges.append((u, v))
+
+        plt.clf()
+
+        nx.draw_networkx_nodes(
             graph,
             pos,
             node_color=node_colors,
-            with_labels=False
+            node_size=node_sizes
         )
-        plt.title(title)
 
+        nx.draw_networkx_edges(
+            graph,
+            pos,
+            edgelist=normal_edges,
+            width=1,
+            alpha=0.5
+        )
+
+        nx.draw_networkx_edges(
+            graph,
+            pos,
+            edgelist=high_voltage_edges,
+            width=3,         
+            alpha=0.9,
+            style="solid"
+        )
+
+        plt.title(title)
         plt.pause(1)
             
     def run(self, fitness_env, generations=50, edge_prob=0.1,

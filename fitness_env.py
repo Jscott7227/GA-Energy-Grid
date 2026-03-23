@@ -257,6 +257,10 @@ class GridFitnessEnv:
         return score
     
     def initialize_power_serving(self, G):
+        
+        for n in G.nodes:
+            G.nodes[n]["served"] = False
+            
         visited = set()
         for node, data in G.nodes(data=True):
             if data.get("type") != "generator":
