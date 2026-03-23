@@ -38,7 +38,8 @@ nx.draw(
     graph,
     pos,
     node_color=node_colors,
-    with_labels=False
+    with_labels=False,
+    node_size=100,
 )
 
 plt.title("Generated Grid Node Distribution (Colored by Type)")
