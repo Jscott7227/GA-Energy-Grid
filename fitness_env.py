@@ -241,7 +241,7 @@ class GridFitnessEnv:
             node_type = data.get("type")
             if node_type in type_totals:
                 type_totals[node_type] += 1
-                if data.get("served", False):
+                if data.get("served", True):
                     type_served[node_type] += 1
         
         score = 0.0      
@@ -256,6 +256,47 @@ class GridFitnessEnv:
         # Percentage of total system functionality satisfied, weighted by importance
         return score
     
+    def initialize_power_serving(self, G):
+        visited = set()
+        for node, data in G.nodes(data=True):
+            if data.get("type") != "generator":
+                continue
+            if node in visited:
+                continue
+
+            component = nx.node_connected_component(G, node)
+            visited.update(component)
+
+            supply = 0.0
+            generators = []
+            for n in component:
+                if G.nodes[n].get("type") == "generator":
+                    gen_power = G.nodes[n].get("power_generated", 0.0)
+                    supply += gen_power
+                    generators.append(n)
+
+            demand = 0.0
+            for n in component:
+                if G.nodes[n].get("type") != "generator":
+                    demand += G.nodes[n].get("power_required", 0.0)
+
+            is_served = supply >= demand
+
+            for n in component:
+                if G.nodes[n].get("type") != "generator":
+                    G.nodes[n]["served"] = is_served
+
+            for g in generators:
+                G.nodes[g]["served"] = is_served
+
+        for component in nx.connected_components(G):
+            if any(G.nodes[n].get("type") == "generator" for n in component):
+                continue
+
+            for n in component:
+                G.nodes[n]["served"] = False
+        
+    
     #TODO Calc cost of lines
     def infrastructure_cost(self, G):
         total_cost = 0.0
@@ -267,6 +308,7 @@ class GridFitnessEnv:
     
     #TODO determine good fitness score scale
     def evaluate(self, G):
+        self.initialize_power_serving(G)
         reliability_score = self.run_simulation(G)
         raw_cost = self.infrastructure_cost(G)
         n = G.number_of_nodes()
