@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 
 EDGE_TYPES = {
         "normal": {
-            "cost_per_distance": 1.0,
+            "cost_per_distance": 1.5,
             "max_distance": 75.0
         },
         "high_voltage": {
-            "cost_per_distance": 2.0,
+            "cost_per_distance": 4,
             "max_distance": 250.0
         }
     }

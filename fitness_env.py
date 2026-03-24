@@ -3,7 +3,7 @@ import random
 import json
 
 class GridFitnessEnv:
-    def __init__(self, weather_config_path, cyber_model, mc_trajectories=5, years=1, weeks_per_year=52, rng=None):
+    def __init__(self, weather_config_path, cyber_model, mc_trajectories=5, years=1, weeks_per_year=52, alpha=0.01, rng=None):
         # Load weather configuration from JSON
         with open(weather_config_path, "r") as f:
             self.weather_config = json.load(f)
@@ -13,6 +13,7 @@ class GridFitnessEnv:
         self.weeks_per_year = weeks_per_year
         self.rng = rng or random.Random()
         self.mc_trajectories = mc_trajectories
+        self.alpha = alpha
 
         # Node importance weights
         self.node_weights = {
@@ -88,8 +89,8 @@ class GridFitnessEnv:
     #TODO currently requires one generator per sub-graph
     #TODO Set lenght of blackout / node trims / node disconnections
     #TODO Check for reliability bug 
-    def _weather_propigation(self, G, severity, alpha=0.01, super_failure = 10):
-        generation_scale = (1 - alpha * severity)
+    def _weather_propigation(self, G, severity, super_failure = 10):
+        generation_scale = (1 - self.alpha * severity)
         #TODO grab from config
         line_fail_prob = min(1.0, 0.02 * severity)
         
@@ -111,7 +112,6 @@ class GridFitnessEnv:
             supply = data.get("power_generated", 0.0) * generation_scale
             
             demand = 0.0
-            #TODO Determine how to add substations either GA placed or env generated
             
             substations = []
             demand_nodes = {
@@ -137,7 +137,7 @@ class GridFitnessEnv:
                 deficit = abs(supply - demand)
                 
                 # Rolling blackout (local)
-                if deficit < super_failure:
+                while deficit < super_failure:
                     trim_order = ["residential", "commercial", "essential"]
                     
                     #TODO ADD smart trim logic
@@ -145,8 +145,7 @@ class GridFitnessEnv:
                         for n in demand_nodes[t]:
                             for neigh in list(G.neighbors(n)):
                                 if neigh in substations:
-                                    if random.random() < severity * 0.05:
-                                        G.remove_edge(n, neigh)
+                                    G.remove_edge(n, neigh)
                                         
                     connected = nx.node_connected_component(G, node)
                     demand = sum(
@@ -154,7 +153,7 @@ class GridFitnessEnv:
                         for x in connected
                         if G.nodes[x].get("type") != "generator"
                     )
-
+                    
                     if supply >= demand:
                         break
                 
@@ -188,9 +187,8 @@ class GridFitnessEnv:
                 if G.nodes[n].get("type") != "generator":
                     G.nodes[n]["served"] = has_generator
     
-    #Alpha 
     #Percentage of power generation lost per storm severity
-    def run_trajectory(self, G, trajectory, alpha = 0.01):
+    def run_trajectory(self, G, trajectory):
     
         weekly_scores = []
         
@@ -201,7 +199,7 @@ class GridFitnessEnv:
         
             # Apply weather failures
             if severity is not None:
-                self._weather_propigation(G_sim, severity, alpha)
+                self._weather_propigation(G_sim, severity)
 
             #TODO Propigation to nodes in a realistic manner
             # Apply cyber attack failures
@@ -337,7 +335,7 @@ class GridFitnessEnv:
         normalized_cost = raw_cost / max_possible_cost if max_possible_cost > 0 else 0.0
         normalized_cost = max(0.0, min(5.0, normalized_cost))
 
-        cost_weight = 1
+        cost_weight = 0.75
         fitness = reliability_score - normalized_cost * cost_weight - power_usage
         return fitness
     

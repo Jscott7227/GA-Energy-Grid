@@ -31,9 +31,9 @@ CONFIG = {
     },
 
     "power_requirement_distribution": {
-        "essential": {"mean": 100, "std": 10},
-        "residential": {"mean": 25, "std": 5},
-        "commercial": {"mean": 50, "std": 10},
+        "essential": {"mean": 80, "std": 10},
+        "residential": {"mean": 20, "std": 5},
+        "commercial": {"mean": 40, "std": 10},
         "generator": {"mean": 5, "std": 2},
         "substation": {"mean": 5, "std": 2}
     }
