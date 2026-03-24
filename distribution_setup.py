@@ -10,18 +10,18 @@ CONFIG = {
 
     "node_type_percentages": {
         "essential": 0.15,
-        "generator": 0.10,
-        "residential": 0.40,
+        "generator": 0.04,
+        "residential": 0.41,
         "commercial": 0.25,
-        "substation": 0.10
+        "substation": 0.15
     },
 
     "spatial_bias": {
-        "residential": {"attract_prob": 0.7, "radius": 80, "min_dist": 1.5},
-        "commercial": {"attract_prob": 0.6, "radius": 100, "min_dist": 2},
-        "essential": {"attract_prob": 0.5, "radius": 120, "min_dist": 3},
-        "generator": {"attract_prob": 0.0, "radius": 150, "min_dist": 5},
-        "substation": {"attract_prob": 0.0, "radius": 150, "min_dist": 5}
+        "residential": {"attract_prob": 0.7, "radius": 80, "min_dist": 15},
+        "commercial": {"attract_prob": 0.6, "radius": 100, "min_dist": 20},
+        "essential": {"attract_prob": 0.5, "radius": 120, "min_dist": 30},
+        "generator": {"attract_prob": 0.0, "radius": 150, "min_dist": 50},
+        "substation": {"attract_prob": 0.0, "radius": 150, "min_dist": 50}
     },
 
     "power_generation_distribution": {
@@ -32,8 +32,8 @@ CONFIG = {
 
     "power_requirement_distribution": {
         "essential": {"mean": 100, "std": 10},
-        "residential": {"mean": 10, "std": 5},
-        "commercial": {"mean": 100, "std": 10},
+        "residential": {"mean": 25, "std": 5},
+        "commercial": {"mean": 50, "std": 10},
         "generator": {"mean": 5, "std": 2},
         "substation": {"mean": 5, "std": 2}
     }

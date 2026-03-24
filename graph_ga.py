@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 EDGE_TYPES = {
         "normal": {
             "cost_per_distance": 1.0,
-            "max_distance": 50.0
+            "max_distance": 200.0
         },
         "high_voltage": {
             "cost_per_distance": 2.0,
-            "max_distance": 120.0
+            "max_distance": 1200.0
         }
     }
 
@@ -49,6 +49,14 @@ class GraphCandidate:
                     dist = math.hypot(x2 - x1, y2 - y1)
 
                     edge_type = self._choose_edge_type(dist)
+                    
+                    if edge_type == "high_voltage":
+                        if not (
+                            (type_i == "generator" and type_j == "substation") or
+                            (type_j == "generator" and type_i == "substation") or
+                            (type_i == "substation" and type_j == "substation")
+                        ):
+                            continue
 
                     params = edge_types[edge_type]
 
@@ -68,12 +76,10 @@ class GraphCandidate:
         self._apply_edges()
 
     def _choose_edge_type(self, dist):
-        if dist < 30:
-            p_high_voltage = 0.1
-        elif dist < 80:
-            p_high_voltage = 0.4
+        if dist < 250:
+            p_high_voltage = 0.0
         else:
-            p_high_voltage = 0.8
+            p_high_voltage = 0.95
 
         return "high_voltage" if self.rng.random() < p_high_voltage else "normal"
     
@@ -160,15 +166,22 @@ class GraphGA:
         existing_edges = list(new_edges)
         
         for edge in existing_edges:
-            if self.rng.random() < mutation_rate * 0.25:
+            if self.rng.random() < mutation_rate:
                 i, j, edge_type, dist, cost, cpd, max_dist = edge
-
+                type_i = self.base_graph.nodes[i]["type"]
+                type_j = self.base_graph.nodes[j]["type"]
                 new_type = (
                     "high_voltage"
                     if edge_type == "normal"
                     else "normal"
                 )
-
+                if new_type == "high_voltage":
+                        if not (
+                            (type_i == "generator" and type_j == "substation") or
+                            (type_j == "generator" and type_i == "substation") or
+                            (type_i == "substation" and type_j == "substation")
+                        ):
+                            continue
                 x1, y1 = candidate.base_graph.nodes[i]["pos"]
                 x2, y2 = candidate.base_graph.nodes[j]["pos"]
                 dist = math.hypot(x2 - x1, y2 - y1)
@@ -218,8 +231,17 @@ class GraphGA:
             dist = math.hypot(x2 - x1, y2 - y1)
 
             edge_type = candidate._choose_edge_type(dist)
+            
+            if edge_type == "high_voltage":
+                        if not (
+                            (type_i == "generator" and type_j == "substation") or
+                            (type_j == "generator" and type_i == "substation") or
+                            (type_i == "substation" and type_j == "substation")
+                        ):
+                            continue
+            
             params = edge_types[edge_type]
-
+            
             if dist <= params["max_distance"]:
                 cost = dist * params["cost_per_distance"]
 
@@ -254,7 +276,7 @@ class GraphGA:
         ]
         
         node_sizes = [
-            200 if graph.nodes[n].get("served") else 100
+            125 if graph.nodes[n].get("served") else 100
             for n in graph.nodes
         ]
 

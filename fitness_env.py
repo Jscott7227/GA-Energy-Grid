@@ -317,12 +317,12 @@ class GridFitnessEnv:
         raw_cost = self.infrastructure_cost(G)
         n = G.number_of_nodes()
 
-        max_cost_per_edge = 50
+        max_cost_per_edge = 10
         max_possible_edges = n * (n - 1) / 2 if n > 1 else 1
         max_possible_cost = max_possible_edges * max_cost_per_edge
 
         normalized_cost = raw_cost / max_possible_cost if max_possible_cost > 0 else 0.0
-        normalized_cost = max(0.0, min(1.0, normalized_cost))
+        normalized_cost = max(0.0, min(5.0, normalized_cost))
 
         cost_weight = 1
         fitness = reliability_score - normalized_cost * cost_weight
