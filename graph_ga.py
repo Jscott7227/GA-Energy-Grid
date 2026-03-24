@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 EDGE_TYPES = {
         "normal": {
             "cost_per_distance": 1.0,
-            "max_distance": 200.0
+            "max_distance": 75.0
         },
         "high_voltage": {
             "cost_per_distance": 2.0,
-            "max_distance": 1200.0
+            "max_distance": 250.0
         }
     }
 
@@ -76,7 +76,7 @@ class GraphCandidate:
         self._apply_edges()
 
     def _choose_edge_type(self, dist):
-        if dist < 250:
+        if dist < 100:
             p_high_voltage = 0.0
         else:
             p_high_voltage = 0.95
@@ -348,6 +348,6 @@ class GraphGA:
                 print(f"Gen {gen+1}: Best fitness = {best.fitness:.4f}")
                 
             if verbose >= 2:
-                self.plot_graph(best.G, title=f"Generation {gen} Best Graph")
+                self.plot_graph(best.G, title=f"Generation {gen} Best Graph \n Fitness {best.fitness:.4f}")
 
         return max(self.population, key=lambda c: c.fitness)

@@ -47,12 +47,12 @@ plt.show()
 
 cyber_model = CyberAttackModel()
 env = GridFitnessEnv("weather_configs/new_england.json", cyber_model, rng=random.Random(42))
-ga = GraphGA(graph, population_size=10, rng=np.random.default_rng(42))
+ga = GraphGA(graph, population_size=50, rng=np.random.default_rng(42))
 
 best_candidate = ga.run(
     env,
     generations=100,
-    edge_prob=0.2,
+    edge_prob=0.1,
     mutation_rate=0.05,
     top_k=3,
     verbose=2

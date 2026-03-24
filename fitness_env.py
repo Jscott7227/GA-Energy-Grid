@@ -310,11 +310,24 @@ class GridFitnessEnv:
 
         return total_cost
     
+    def power_usage_penalty(self, G):
+        total_gen = 0
+        unconnected_gen = 0
+
+        for node in G.nodes:
+            if G.nodes[node]["type"] == "generator":
+                total_gen += 1
+                if G.degree[node] == 0:
+                    unconnected_gen += 1
+
+        return unconnected_gen / total_gen
+    
     #TODO determine good fitness score scale
     def evaluate(self, G):
         self.initialize_power_serving(G)
         reliability_score = self.run_simulation(G)
         raw_cost = self.infrastructure_cost(G)
+        power_usage = self.power_usage_penalty(G)
         n = G.number_of_nodes()
 
         max_cost_per_edge = 10
@@ -325,6 +338,6 @@ class GridFitnessEnv:
         normalized_cost = max(0.0, min(5.0, normalized_cost))
 
         cost_weight = 1
-        fitness = reliability_score - normalized_cost * cost_weight
+        fitness = reliability_score - normalized_cost * cost_weight - power_usage
         return fitness
     
