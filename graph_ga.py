@@ -164,14 +164,17 @@ class GraphGA:
         N = len(nodes)
 
         # Need to sometimes mutate substation nodes position
-        substation_nodes = [n for n in nodes if candidate.base_graph.nodes[n]["type"] == "substation"]
-        substation_movement_factor = 2
-        for node in substation_nodes:
-            if self.rng.random() < substation_movement_factor * mutation_rate:
-                x, y = candidate.base_graph.nodes[node]["pos"]
-                x += self.rng.normal(0,10)
-                y += self.rng.normal(0,10)
-                candidate.base_graph.nodes[node]["pos"] = (x, y)
+        # substation_nodes = [n for n in nodes if candidate.base_graph.nodes[n]["type"] == "substation"]
+        #       made more memory efficient but not as much fun to read
+        substation_movement_factor = 10
+        for node in nodes:
+            if candidate.base_graph.nodes[node]["type"] == "substation":
+                if self.rng.random() < substation_movement_factor * mutation_rate: 
+                    #can add smart movement here later
+                    x, y = candidate.base_graph.nodes[node]["pos"]
+                    x += self.rng.normal(0,2)
+                    y += self.rng.normal(0,2)
+                    candidate.base_graph.nodes[node]["pos"] = (x, y)
 
         edge_types = EDGE_TYPES
         new_edges = set(candidate.edge_set)
