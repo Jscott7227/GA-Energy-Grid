@@ -25,7 +25,7 @@ class GraphCandidate:
         
      
     # Currently Random
-    def generate_edges(self, edge_prob=0.1):
+    def generate_edges(self, edge_prob=0.05):
         nodes = list(self.base_graph.nodes)
         N = len(nodes)
         self.edge_set.clear()
@@ -158,9 +158,21 @@ class GraphGA:
         return child
     
     # Random mutation with chance to add, remove and update nodes
-    def mutate(self, candidate, mutation_rate=0.05):
+    def mutate(self, candidate, mutation_rate=0.1):
         nodes = list(candidate.base_graph.nodes)
+        
         N = len(nodes)
+
+        # Need to sometimes mutate substation nodes position
+        substation_nodes = [n for n in nodes if candidate.base_graph.nodes[n]["type"] == "substation"]
+        substation_movement_factor = 2
+        for node in substation_nodes:
+            if self.rng.random() < substation_movement_factor * mutation_rate:
+                x, y = candidate.base_graph.nodes[node]["pos"]
+                x += self.rng.normal(0,10)
+                y += self.rng.normal(0,10)
+                candidate.base_graph.nodes[node]["pos"] = (x, y)
+
         edge_types = EDGE_TYPES
         new_edges = set(candidate.edge_set)
         existing_edges = list(new_edges)
