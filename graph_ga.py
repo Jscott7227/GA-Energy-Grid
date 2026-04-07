@@ -2,6 +2,7 @@ import numpy as np
 import networkx as nx
 import math
 import matplotlib.pyplot as plt
+from collections import defaultdict
 
 EDGE_TYPES = {
         "normal": {
@@ -23,6 +24,8 @@ class GraphCandidate:
         self.edge_set = set()
         self.fitness = None
         
+        self.node_outage_counts = defaultdict(int)
+        self.total_steps = 0
      
     # Currently Random
     def generate_edges(self, edge_prob=0.05):
@@ -99,8 +102,18 @@ class GraphCandidate:
     def _get_position(self, node_id):
         return self.base_graph.nodes[node_id]["pos"]
     
+    def get_outage_rates(self):
+        if self.total_steps == 0:
+            return {}
+        return {
+            node: count / self.total_steps
+            for node, count in self.node_outage_counts.items()
+        }
+    
     def evaluate_fitness(self, fitness_env):
-        self.fitness = fitness_env.evaluate(self.G)
+        self.node_outage_counts.clear()
+        self.total_steps = 0
+        self.fitness = fitness_env.evaluate(self.G, self)
         return self.fitness
     
 class GraphGA:
@@ -274,7 +287,7 @@ class GraphGA:
         candidate._apply_edges()
         
     
-    def plot_graph(self, graph, title="Graph"):
+    def plot_graph(self, graph, title="Graph", rates=None):
         pos = nx.get_node_attributes(graph, "pos")
 
         color_map = {
@@ -307,6 +320,23 @@ class GraphGA:
 
         plt.clf()
 
+        
+        if rates is not None:
+            print(rates)
+            nonzero_nodes = [n for n in graph.nodes if rates.get(n, 0.0) > 0]
+            heat_values = [rates[n] for n in nonzero_nodes]
+            heat_sizes = [node_sizes[list(graph.nodes).index(n)] * 2.5 for n in nonzero_nodes]
+
+            nx.draw_networkx_nodes(
+                graph,
+                pos,
+                nodelist=nonzero_nodes,
+                node_color=heat_values,
+                node_size=heat_sizes,
+                cmap=plt.cm.Reds,
+                alpha=0.5
+)
+        
         nx.draw_networkx_nodes(
             graph,
             pos,
@@ -332,7 +362,7 @@ class GraphGA:
         )
 
         plt.title(title)
-        plt.pause(1)
+        plt.pause(0.1)
             
     def run(self, fitness_env, generations=50, edge_prob=0.1,
             mutation_rate=0.05, top_k=3, verbose=1):
@@ -357,12 +387,19 @@ class GraphGA:
             fitness_env.generate_weather_scenarios()
             for c in self.population:
                 c.evaluate_fitness(fitness_env)
-                
+            
+            #Print best fitness
             if verbose:
                 best = max(self.population, key=lambda c: c.fitness)
                 print(f"Gen {gen+1}: Best fitness = {best.fitness:.4f}")
-                
+            
+            #Print Images of graph at each generation    
             if verbose >= 2:
                 self.plot_graph(best.G, title=f"Generation {gen} Best Graph \n Fitness {best.fitness:.4f}")
+            
+            #
+            if verbose >= 3:
+                rates = best.get_outage_rates()
+                self.plot_graph(best.G, title=f"Generation {gen} Best Graph \n Fitness {best.fitness:.4f}", rates=rates)
 
         return max(self.population, key=lambda c: c.fitness)

@@ -87,7 +87,6 @@ class GridFitnessEnv:
         return self.weather_config["edge_failure_probability"].get(event, 0)
     
     #TODO currently requires one generator per sub-graph
-    #TODO Set lenght of blackout / node trims / node disconnections
     #TODO Check for reliability bug 
     def _weather_propigation(self, G, severity, super_failure = 10):
         generation_scale = (1 - self.alpha * severity)
@@ -188,7 +187,7 @@ class GridFitnessEnv:
                     G.nodes[n]["served"] = has_generator
     
     #Percentage of power generation lost per storm severity
-    def run_trajectory(self, G, trajectory):
+    def run_trajectory(self, G, trajectory, candidate):
     
         weekly_scores = []
         
@@ -209,22 +208,23 @@ class GridFitnessEnv:
             #             G_sim.remove_edge(*edge)
 
             # Evaluate power availability
-            score = self._evaluate_power(G_sim)
+            score = self._evaluate_power(G_sim, candidate)
             weekly_scores.append(score)
         return sum(weekly_scores) / len(weekly_scores)
     
     #TODO Currently treats each week independently adjust if wanting a time based scenario
-    def run_simulation(self, G):
+    def run_simulation(self, G, candidate):
         trajectory_scores = []
 
         for trajectory in self.weather_scenarios:
-            score = self.run_trajectory(G, trajectory)
+            self.initialize_power_serving(G)
+            score = self.run_trajectory(G, trajectory, candidate)
             trajectory_scores.append(score)
             #print(f"Finished Trajectory with reliability_score: {score}")
         return sum(trajectory_scores) / len(trajectory_scores)
     
     #TODO Check for possible power eval bug
-    def _evaluate_power(self, G):
+    def _evaluate_power(self, G, candidate):
         
         node_type_weights = {
             "essential": 0.5,
@@ -237,18 +237,18 @@ class GridFitnessEnv:
         
         for node, data in G.nodes(data=True):
             node_type = data.get("type")
+            if not data.get("served", True):
+                candidate.node_outage_counts[node] += 1
             if node_type in type_totals:
                 type_totals[node_type] += 1
                 if data.get("served", True):
                     type_served[node_type] += 1
-        
+                    
+        candidate.total_steps += 1
         score = 0.0      
         for node_type, weight in node_type_weights.items():
             total = type_totals[node_type]
-            if total > 0:
-                served_fraction = type_served[node_type] / total
-            else:
-                served_fraction = 0.0
+            served_fraction = (type_served[node_type] / total) if total > 0 else 0.0
             score += weight * served_fraction
         
         # Percentage of total system functionality satisfied, weighted by importance
@@ -299,7 +299,6 @@ class GridFitnessEnv:
                 G.nodes[n]["served"] = False
         
     
-    #TODO Calc cost of lines
     def infrastructure_cost(self, G):
         total_cost = 0.0
 
@@ -321,9 +320,10 @@ class GridFitnessEnv:
         return unconnected_gen / total_gen
     
     #TODO determine good fitness score scale
-    def evaluate(self, G):
-        self.initialize_power_serving(G)
-        reliability_score = self.run_simulation(G)
+    def evaluate(self, G, candidate):
+        # for n in G.nodes:
+        #     G.nodes[n]["outage_count"] = 0
+        reliability_score = self.run_simulation(G, candidate)
         raw_cost = self.infrastructure_cost(G)
         power_usage = self.power_usage_penalty(G)
         n = G.number_of_nodes()

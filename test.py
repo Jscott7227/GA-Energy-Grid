@@ -55,7 +55,7 @@ best_candidate = ga.run(
     edge_prob=0.75,
     mutation_rate=0.05,
     top_k=5,
-    verbose=2
+    verbose=3
 )
 
 print("Best candidate fitness:", best_candidate.fitness)
