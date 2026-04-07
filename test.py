@@ -53,7 +53,7 @@ best_candidate = ga.run(
     env,
     generations=100,
     edge_prob=0.75,
-    mutation_rate=0.005,
+    mutation_rate=0.05,
     top_k=5,
     verbose=2
 )
