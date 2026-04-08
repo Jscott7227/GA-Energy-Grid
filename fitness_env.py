@@ -208,6 +208,7 @@ class GridFitnessEnv:
             #             G_sim.remove_edge(*edge)
 
             # Evaluate power availability
+            
             score = self._evaluate_power(G_sim, candidate)
             weekly_scores.append(score)
         return sum(weekly_scores) / len(weekly_scores)
@@ -325,6 +326,7 @@ class GridFitnessEnv:
         #     G.nodes[n]["outage_count"] = 0
         reliability_score = self.run_simulation(G, candidate)
         raw_cost = self.infrastructure_cost(G)
+        candidate.raw_cost = raw_cost
         power_usage = self.power_usage_penalty(G)
         n = G.number_of_nodes()
 

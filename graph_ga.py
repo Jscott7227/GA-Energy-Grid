@@ -23,6 +23,7 @@ class GraphCandidate:
         self.rng = rng or np.random.default_rng()
         self.edge_set = set()
         self.fitness = None
+        self.raw_cost = None
         
         self.node_outage_counts = defaultdict(int)
         self.total_steps = 0
@@ -323,19 +324,17 @@ class GraphGA:
         
         if rates is not None:
             print(rates)
-            nonzero_nodes = [n for n in graph.nodes if rates.get(n, 0.0) > 0]
-            heat_values = [rates[n] for n in nonzero_nodes]
-            heat_sizes = [node_sizes[list(graph.nodes).index(n)] * 2.5 for n in nonzero_nodes]
+            heat_values = [rates.get(n, 0.0) for n in graph.nodes]
+            heat_sizes = [200 * (1 + rates.get(n, 0.0)) for n in graph.nodes]
 
             nx.draw_networkx_nodes(
                 graph,
                 pos,
-                nodelist=nonzero_nodes,
                 node_color=heat_values,
                 node_size=heat_sizes,
                 cmap=plt.cm.Reds,
-                alpha=0.5
-)
+                alpha=0.5 
+            )
         
         nx.draw_networkx_nodes(
             graph,
@@ -400,6 +399,6 @@ class GraphGA:
             #
             if verbose >= 3:
                 rates = best.get_outage_rates()
-                self.plot_graph(best.G, title=f"Generation {gen} Best Graph \n Fitness {best.fitness:.4f}", rates=rates)
+                self.plot_graph(best.G, title=f"Generation {gen} Best Graph \n Fitness: {best.fitness:.4f} \n Raw Cost: ${best.raw_cost:.2f}", rates=rates)
 
         return max(self.population, key=lambda c: c.fitness)
