@@ -4,23 +4,645 @@
   "seasonal_event_probs": {
 
     "winter": {
-      "ice_storm": 0.05,
-      "cold_snap": 0.05
+      "Drought": 0.069698,
+      "Winter Weather": 0.069586,
+      "High Wind": 0.069461,
+      "Hail": 0.069174,
+      "Winter Storm": 0.068962,
+      "Thunderstorm Wind": 0.068528,
+      "Heavy Snow": 0.065124,
+      "Flash Flood": 0.064629,
+      "Ice Storm": 0.059949,
+      "Cold/Wind Chill": 0.056469,
+      "Frost/Freeze": 0.053246,
+      "Tornado": 0.045153,
+      "Wildfire": 0.040552,
+      "Extreme Cold/Wind Chill": 0.039948,
+      "Heavy Rain": 0.031546,
+      "Flood": 0.023337,
+      "Dense Fog": 0.020394,
+      "Blizzard": 0.018329,
+      "Strong Wind": 0.016041,
+      "Dust Storm": 0.013072,
+      "Freezing Fog": 0.009168,
+      "Lightning": 0.007436,
+      "Astronomical Low Tide": 0.006471,
+      "Sleet": 0.006146,
+      "Funnel Cloud": 0.005983,
+      "Coastal Flood": 0.00124,
+      "Rip Current": 0.000178,
+      "Waterspout": 0.000178
     },
 
     "spring": {
-      "storm": 0.12,
-      "tornado": 0.08
+     "Hail": 0.080141,
+    "Thunderstorm Wind": 0.080141,
+    "Drought": 0.080141,
+    "Flash Flood": 0.08014,
+    "High Wind": 0.080079,
+    "Tornado": 0.080011,
+    "Wildfire": 0.059392,
+    "Flood": 0.054733,
+    "Winter Weather": 0.048948,
+    "Lightning": 0.048301,
+    "Funnel Cloud": 0.044772,
+    "Cold/Wind Chill": 0.035247,
+    "Heavy Snow": 0.034551,
+    "Heat": 0.032398,
+    "Heavy Rain": 0.028975,
+    "Dust Storm": 0.023303,
+    "Winter Storm": 0.02257,
+    "Strong Wind": 0.021377,
+    "Frost/Freeze": 0.018916,
+    "Excessive Heat": 0.011075,
+    "Blizzard": 0.008182,
+    "Rip Current": 0.006879,
+    "Sleet": 0.004976,
+    "Coastal Flood": 0.004201,
+    "Dense Fog": 0.003024,
+    "Astronomical Low Tide": 0.002229,
+    "Ice Storm": 0.002029,
+    "Dust Devil": 0.001426,
+    "High Surf": 0.000614,
+    "Extreme Cold/Wind Chill": 0.00041,
+    "Waterspout": 0.00041,
+    "Debris Flow": 0.000205,
+    "Sneakerwave": 0.000205
     },
 
     "summer": {
-      "heatwave": 0.20,
-      "hurricane": 0.05
+      "Thunderstorm Wind": 0.087196,
+    "Hail": 0.087196,
+    "Flash Flood": 0.087196,
+    "Drought": 0.087195,
+    "Heat": 0.087193,
+    "Excessive Heat": 0.086111,
+    "Tornado": 0.071828,
+    "Flood": 0.068522,
+    "Lightning": 0.059337,
+    "Wildfire": 0.05577,
+    "Heavy Rain": 0.044117,
+    "High Wind": 0.042885,
+    "Funnel Cloud": 0.040553,
+    "Tropical Storm": 0.033764,
+    "Storm Surge/Tide": 0.013952,
+    "Dust Storm": 0.008902,
+    "Hurricane (Typhoon)": 0.00728,
+    "Tropical Depression": 0.00728,
+    "Strong Wind": 0.006869,
+    "Rip Current": 0.005832,
+    "Coastal Flood": 0.003719,
+    "Waterspout": 0.003075,
+    "Dense Fog": 0.001111,
+    "Blizzard": 0.00089,
+    "High Surf": 0.00089,
+    "Debris Flow": 0.000446,
+    "Dust Devil": 0.000446,
+    "Astronomical Low Tide": 0.000223,
+    "Cold/Wind Chill": 0.000223
     },
 
     "fall": {
-      "storm": 0.08,
-      "hurricane": 0.04
+      "Drought": 0.086531,
+    "Flash Flood": 0.086507,
+    "Thunderstorm Wind": 0.086472,
+    "Hail": 0.086464,
+    "Flood": 0.068562,
+    "Tornado": 0.065627,
+    "High Wind": 0.062274,
+    "Heat": 0.059723,
+    "Winter Weather": 0.036286,
+    "Winter Storm": 0.033507,
+    "Wildfire": 0.032822,
+    "Heavy Snow": 0.032408,
+    "Heavy Rain": 0.028528,
+    "Ice Storm": 0.02793,
+    "Lightning": 0.027021,
+    "Tropical Storm": 0.02421,
+    "Funnel Cloud": 0.02405,
+    "Cold/Wind Chill": 0.022263,
+    "Excessive Heat": 0.021266,
+    "Dense Fog": 0.013845,
+    "Coastal Flood": 0.013659,
+    "Storm Surge/Tide": 0.013472,
+    "Strong Wind": 0.013284,
+    "Hurricane (Typhoon)": 0.010607,
+    "Frost/Freeze": 0.010412,
+    "Dust Storm": 0.003478,
+    "Rip Current": 0.002407,
+    "Sleet": 0.001757,
+    "Astronomical Low Tide": 0.001539,
+    "High Surf": 0.001321,
+    "Waterspout": 0.001102,
+    "Dense Smoke": 0.000222,
+    "Seiche": 0.000222,
+    "Tropical Depression": 0.000222
+    }
+  },
+  "seasonal_severity_distribution": {
+    "fall": {
+      "astronomical low tide": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "coastal flood": {
+        "mean": 7.147014925373135,
+        "std": 50.876326302864406
+      },
+      "cold/wind chill": {
+        "mean": 0.0172413793103448,
+        "std": 0.1856953381770518
+      },
+      "dense fog": {
+        "mean": 1.161764705882353,
+        "std": 5.214389659960206
+      },
+      "dense smoke": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "drought": {
+        "mean": 1.823653291953004,
+        "std": 21.00568219078272
+      },
+      "dust storm": {
+        "mean": 0.4375,
+        "std": 1.75
+      },
+      "excessive heat": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "flash flood": {
+        "mean": 8.915404642409035,
+        "std": 39.41027689377551
+      },
+      "flood": {
+        "mean": 10.323907014681891,
+        "std": 40.75674606672155
+      },
+      "frost/freeze": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "funnel cloud": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "hail": {
+        "mean": 1.7371323529411764,
+        "std": 12.155767463759595
+      },
+      "heat": {
+        "mean": 0.5995623632385121,
+        "std": 6.42051944810486
+      },
+      "heavy rain": {
+        "mean": 3.3560897435897434,
+        "std": 12.202636339886022
+      },
+      "heavy snow": {
+        "mean": 0.3215846994535519,
+        "std": 3.040809645325611
+      },
+      "high surf": {
+        "mean": 2.333333333333333,
+        "std": 3.2041639575194445
+      },
+      "high wind": {
+        "mean": 0.941532258064516,
+        "std": 6.440352496075414
+      },
+      "hurricane (typhoon)": {
+        "mean": 103.28186274509804,
+        "std": 344.2743426788595
+      },
+      "ice storm": {
+        "mean": 8.0,
+        "std": 44.05167044362985
+      },
+      "lightning": {
+        "mean": 32.9986301369863,
+        "std": 56.31142621394404
+      },
+      "rip current": {
+        "mean": 2.1818181818181817,
+        "std": 0.6030226891555273
+      },
+      "seiche": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "sleet": {
+        "mean": 6.875,
+        "std": 15.512092057488571
+      },
+      "storm surge/tide": {
+        "mean": 14.418333333333331,
+        "std": 50.262229574451545
+      },
+      "strong wind": {
+        "mean": 3.717692307692308,
+        "std": 6.666124897858288
+      },
+      "thunderstorm wind": {
+        "mean": 6.276784707540521,
+        "std": 22.560321721419115
+      },
+      "tornado": {
+        "mean": 24.4127166064982,
+        "std": 57.62357865783291
+      },
+      "tropical depression": {
+        "mean": 2.5,
+        "std": 0.0
+      },
+      "tropical storm": {
+        "mean": 26.54921875,
+        "std": 54.719040426634095
+      },
+      "waterspout": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "wildfire": {
+        "mean": 18.36572580645161,
+        "std": 59.587274041640825
+      },
+      "winter storm": {
+        "mean": 1.2617801047120418,
+        "std": 8.42893231509449
+      },
+      "winter weather": {
+        "mean": 2.150943396226415,
+        "std": 18.17277138905528
+      }
+    },
+    "spring": {
+      "astronomical low tide": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "blizzard": {
+        "mean": 9.523809523809524,
+        "std": 61.721339984836746
+      },
+      "coastal flood": {
+        "mean": 5.609523809523809,
+        "std": 11.875382825909435
+      },
+      "cold/wind chill": {
+        "mean": 0.0044247787610619,
+        "std": 0.0469314024810651
+      },
+      "debris flow": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "dense fog": {
+        "mean": 1.4,
+        "std": 5.422176684690384
+      },
+      "drought": {
+        "mean": 0.0293129280821917,
+        "std": 0.8400000630153529
+      },
+      "dust devil": {
+        "mean": 3.4285714285714284,
+        "std": 5.862512057049232
+      },
+      "dust storm": {
+        "mean": 2.0,
+        "std": 8.993105128353836
+      },
+      "excessive heat": {
+        "mean": 0.0689655172413793,
+        "std": 0.3681184480198388
+      },
+      "extreme cold/wind chill": {
+        "mean": 2.0,
+        "std": 2.8284271247461903
+      },
+      "flash flood": {
+        "mean": 6.41380957836847,
+        "std": 31.10818019084166
+      },
+      "flood": {
+        "mean": 10.029241071428572,
+        "std": 41.576635715916936
+      },
+      "frost/freeze": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "funnel cloud": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "hail": {
+        "mean": 2.306689767631472,
+        "std": 16.85945645632794
+      },
+      "heat": {
+        "mean": 0.1386138613861386,
+        "std": 0.5092126977483963
+      },
+      "heavy rain": {
+        "mean": 2.2385714285714284,
+        "std": 8.295581895318593
+      },
+      "heavy snow": {
+        "mean": 0.009090909090909,
+        "std": 0.1348399724926483
+      },
+      "high surf": {
+        "mean": 0.6666666666666666,
+        "std": 1.1547005383792517
+      },
+      "high wind": {
+        "mean": 1.315923076923077,
+        "std": 13.13562728385919
+      },
+      "ice storm": {
+        "mean": 2.45,
+        "std": 4.597402648356038
+      },
+      "lightning": {
+        "mean": 32.03583333333333,
+        "std": 60.83738846267333
+      },
+      "rip current": {
+        "mean": 1.9142857142857144,
+        "std": 1.5218299466611314
+      },
+      "sleet": {
+        "mean": 11.6,
+        "std": 27.602838018339103
+      },
+      "sneakerwave": {
+        "mean": 51.0,
+        "std": 0.0
+      },
+      "strong wind": {
+        "mean": 3.841735537190083,
+        "std": 7.19905114438539
+      },
+      "thunderstorm wind": {
+        "mean": 6.667985565503381,
+        "std": 25.45016215807373
+      },
+      "tornado": {
+        "mean": 23.15356030351437,
+        "std": 76.90372819169575
+      },
+      "waterspout": {
+        "mean": 18.75,
+        "std": 26.516504294495533
+      },
+      "wildfire": {
+        "mean": 18.21583491461101,
+        "std": 56.123445779163326
+      },
+      "winter storm": {
+        "mean": 2.2751937984496124,
+        "std": 12.805479973236508
+      },
+      "winter weather": {
+        "mean": 1.438179347826087,
+        "std": 9.443133410621632
+      }
+    },
+    "summer": {
+      "astronomical low tide": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "blizzard": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "coastal flood": {
+        "mean": 5.882352941176471,
+        "std": 16.605279103876786
+      },
+      "cold/wind chill": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "debris flow": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "dense fog": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "drought": {
+        "mean": 0.1831479192418623,
+        "std": 4.594827754946757
+      },
+      "dust devil": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "dust storm": {
+        "mean": 11.19047619047619,
+        "std": 40.36010955968963
+      },
+      "excessive heat": {
+        "mean": 1.0853302162478082,
+        "std": 22.98531875434504
+      },
+      "flash flood": {
+        "mean": 7.295715294592414,
+        "std": 32.37168789330277
+      },
+      "flood": {
+        "mean": 9.1175540765391,
+        "std": 41.73138798822962
+      },
+      "funnel cloud": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "hail": {
+        "mean": 3.1395995550611797,
+        "std": 23.326073071268347
+      },
+      "heat": {
+        "mean": 0.4192422731804586,
+        "std": 6.529621714529617
+      },
+      "heavy rain": {
+        "mean": 2.340181818181818,
+        "std": 17.41357475457709
+      },
+      "high surf": {
+        "mean": 0.75,
+        "std": 1.5
+      },
+      "high wind": {
+        "mean": 2.685606060606061,
+        "std": 18.408999834767364
+      },
+      "hurricane (typhoon)": {
+        "mean": 62.45647058823529,
+        "std": 96.3906758546242
+      },
+      "lightning": {
+        "mean": 31.26385393258427,
+        "std": 59.314309749215774
+      },
+      "rip current": {
+        "mean": 2.5185185185185186,
+        "std": 0.8489980687832691
+      },
+      "storm surge/tide": {
+        "mean": 13.961323529411764,
+        "std": 39.65634686566057
+      },
+      "strong wind": {
+        "mean": 3.3765625,
+        "std": 7.119181091623008
+      },
+      "thunderstorm wind": {
+        "mean": 5.362488180786687,
+        "std": 25.836377682889516
+      },
+      "tornado": {
+        "mean": 14.97466765140325,
+        "std": 45.32788808166683
+      },
+      "tropical depression": {
+        "mean": 7.382352941176471,
+        "std": 42.86979208118204
+      },
+      "tropical storm": {
+        "mean": 23.12442408376964,
+        "std": 59.34612931938266
+      },
+      "waterspout": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "wildfire": {
+        "mean": 14.386055276381908,
+        "std": 51.03587936576321
+      }
+    },
+    "winter": {
+      "astronomical low tide": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "blizzard": {
+        "mean": 65.07563025210084,
+        "std": 126.11599514570284
+      },
+      "coastal flood": {
+        "mean": 1.7857142857142858,
+        "std": 3.7400662077154783
+      },
+      "cold/wind chill": {
+        "mean": 6.920601851851852,
+        "std": 33.46066117337829
+      },
+      "dense fog": {
+        "mean": 2.737037037037037,
+        "std": 12.65384131837279
+      },
+      "drought": {
+        "mean": 0.0443674856246732,
+        "std": 0.7525609643409147
+      },
+      "dust storm": {
+        "mean": 2.7098765432098766,
+        "std": 10.790581598531562
+      },
+      "extreme cold/wind chill": {
+        "mean": 22.521069277108435,
+        "std": 179.48725576446716
+      },
+      "flash flood": {
+        "mean": 2.916316046966732,
+        "std": 13.849367458335436
+      },
+      "flood": {
+        "mean": 6.132389937106918,
+        "std": 18.36852283012737
+      },
+      "freezing fog": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "frost/freeze": {
+        "mean": 0.1843872113676732,
+        "std": 2.5860146943253755
+      },
+      "funnel cloud": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "hail": {
+        "mean": 1.0824671916010498,
+        "std": 8.531832213925409
+      },
+      "heavy rain": {
+        "mean": 0.1893617021276595,
+        "std": 1.5584391219478555
+      },
+      "heavy snow": {
+        "mean": 4.300376647834275,
+        "std": 23.950815133719274
+      },
+      "high wind": {
+        "mean": 1.7584690185436451,
+        "std": 12.212044431822576
+      },
+      "ice storm": {
+        "mean": 7.430052151238592,
+        "std": 28.159752327962888
+      },
+      "lightning": {
+        "mean": 37.80681818181818,
+        "std": 76.21963489238821
+      },
+      "rip current": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "sleet": {
+        "mean": 1.3194444444444444,
+        "std": 6.679555992277351
+      },
+      "strong wind": {
+        "mean": 9.320588235294116,
+        "std": 20.63951241957717
+      },
+      "thunderstorm wind": {
+        "mean": 6.222284996861268,
+        "std": 21.207099377251343
+      },
+      "tornado": {
+        "mean": 33.404238329238325,
+        "std": 74.95795862591406
+      },
+      "waterspout": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "wildfire": {
+        "mean": 14.290735294117647,
+        "std": 49.950214397305686
+      },
+      "winter storm": {
+        "mean": 4.314692611393119,
+        "std": 28.997240369957044
+      },
+      "winter weather": {
+        "mean": 3.0244991987179484,
+        "std": 23.44614435509257
+      }
     }
   },
 

@@ -4,26 +4,428 @@
   "seasonal_event_probs": {
 
     "winter": {
-      "snowstorm": 0.12,
-      "ice_storm": 0.08,
-      "storm": 0.06
+      "Winter Weather": 0.10348,
+    "Winter Storm": 0.103303,
+    "Thunderstorm Wind": 0.103283,
+    "Heavy Snow": 0.101745,
+    "Flash Flood": 0.085999,
+    "Hail": 0.076285,
+    "Flood": 0.071274,
+    "Drought": 0.070313,
+    "High Wind": 0.070313,
+    "Ice Storm": 0.052118,
+    "Tornado": 0.052118,
+    "Strong Wind": 0.033115,
+    "Cold/Wind Chill": 0.027179,
+    "Extreme Cold/Wind Chill": 0.024339,
+    "Heavy Rain": 0.010222,
+    "Lightning": 0.008261,
+    "Freezing Fog": 0.003177,
+    "Funnel Cloud": 0.001601,
+    "Debris Flow": 0.00107,
+    "Astronomical Low Tide": 0.000269,
+    "Blizzard": 0.000269,
+    "Wildfire": 0.000269
     },
 
     "spring": {
-      "storm": 0.15,
-      "tornado": 0.05
+      "Thunderstorm Wind": 0.132563,
+      "Hail": 0.132557,
+      "Flash Flood": 0.123745,
+      "Tornado": 0.105936,
+      "Flood": 0.076697,
+      "Winter Storm": 0.064851,
+      "Winter Weather": 0.058872,
+      "High Wind": 0.05133,
+      "Frost/Freeze": 0.044384,
+      "Strong Wind": 0.043703,
+      "Drought": 0.040691,
+      "Lightning": 0.038063,
+      "Heavy Snow": 0.037089,
+      "Funnel Cloud": 0.027048,
+      "Heavy Rain": 0.014446,
+      "Ice Storm": 0.005654,
+      "Debris Flow": 0.001353,
+      "Excessive Heat": 0.000339,
+      "Heat": 0.000339,
+      "Sleet": 0.000339
     },
 
     "summer": {
-      "heatwave": 0.10,
-      "storm": 0.08
+      "Thunderstorm Wind": 0.14516,
+      "Heat": 0.142535,
+     "Hail": 0.141478,
+      "Flash Flood": 0.136644,
+     "Excessive Heat": 0.115322,
+      "Drought": 0.098901,
+      "Lightning": 0.073994,
+      "Flood": 0.042736,
+      "Tornado": 0.029024,
+      "Heavy Rain": 0.022599,
+      "Strong Wind": 0.020059,
+      "Funnel Cloud": 0.018445,
+      "Tropical Storm": 0.007962,
+      "High Wind": 0.004398,
+      "Dust Devil": 0.000372,
+      "Marine High Wind": 0.000372
     },
 
     "fall": {
-      "storm": 0.10
+      "Thunderstorm Wind": 0.188599,
+    "Drought": 0.166157,
+    "Flash Flood": 0.132284,
+    "Hail": 0.117666,
+    "High Wind": 0.066899,
+    "Flood": 0.057443,
+    "Tornado": 0.057443,
+    "Winter Weather": 0.052092,
+    "Frost/Freeze": 0.031862,
+    "Strong Wind": 0.030611,
+    "Heavy Snow": 0.025507,
+    "Lightning": 0.022017,
+    "Heavy Rain": 0.018454,
+    "Funnel Cloud": 0.013435,
+    "Tropical Storm": 0.010637,
+    "Tropical Depression": 0.003937,
+    "Wildfire": 0.001979,
+    "Astronomical Low Tide": 0.000992,
+    "Blizzard": 0.000497,
+    "Debris Flow": 0.000497,
+    "Dust Devil": 0.000497,
+    "Heat": 0.000497
     }
   },
 
+  "seasonal_severity_distribution": {
+    "fall": {
+      "astronomical low tide": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "blizzard": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "debris flow": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "drought": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "dust devil": {
+        "mean": 2.5,
+        "std": 0.0
+      },
+      "flash flood": {
+        "mean": 3.5036353467561523,
+        "std": 17.419431560512923
+      },
+      "flood": {
+        "mean": 6.138686131386861,
+        "std": 23.679377967085937
+      },
+      "frost/freeze": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "funnel cloud": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "hail": {
+        "mean": 0.1269368131868131,
+        "std": 0.9178364330094518
+      },
+      "heat": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "heavy rain": {
+        "mean": 1.4615384615384617,
+        "std": 8.022488634248084
+      },
+      "heavy snow": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "high wind": {
+        "mean": 4.96469696969697,
+        "std": 13.786829829111584
+      },
+      "lightning": {
+        "mean": 21.38989361702128,
+        "std": 41.14598171634115
+      },
+      "strong wind": {
+        "mean": 3.873134328358209,
+        "std": 4.637702281451394
+      },
+      "thunderstorm wind": {
+        "mean": 3.963480741797433,
+        "std": 15.749806869508712
+      },
+      "tornado": {
+        "mean": 48.61401459854015,
+        "std": 95.3870735840358
+      },
+      "tropical depression": {
+        "mean": 41.875,
+        "std": 24.3394887843955
+      },
+      "tropical storm": {
+        "mean": 6.931818181818182,
+        "std": 1.995801870984469
+      },
+      "wildfire": {
+        "mean": 21.5,
+        "std": 25.01332977967281
+      },
+      "winter weather": {
+        "mean": 0.0737704918032786,
+        "std": 0.5773698241446413
+      }
+    },
+    "spring": {
+      "debris flow": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "drought": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "excessive heat": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "flash flood": {
+        "mean": 7.947213812677389,
+        "std": 30.65689876093065
+      },
+      "flood": {
+        "mean": 16.525756676557865,
+        "std": 63.45332486485562
+      },
+      "frost/freeze": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "funnel cloud": {
+        "mean": 0.3932584269662921,
+        "std": 2.842925739797303
+      },
+      "hail": {
+        "mean": 0.4623635204081632,
+        "std": 6.5226802093380245
+      },
+      "heat": {
+        "mean": 2.0,
+        "std": 0.0
+      },
+      "heavy rain": {
+        "mean": 0.8,
+        "std": 4.073751900331504
+      },
+      "heavy snow": {
+        "mean": 0.0625,
+        "std": 0.25870665599916
+      },
+      "high wind": {
+        "mean": 28.93232984293193,
+        "std": 71.77826899513528
+      },
+      "ice storm": {
+        "mean": 2.911764705882353,
+        "std": 6.631448027480609
+      },
+      "lightning": {
+        "mean": 23.73784090909091,
+        "std": 48.562549596949445
+      },
+      "sleet": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "strong wind": {
+        "mean": 8.906089743589742,
+        "std": 41.28430903325359
+      },
+      "thunderstorm wind": {
+        "mean": 5.59865874508463,
+        "std": 21.96273156636416
+      },
+      "tornado": {
+        "mean": 43.22761182108626,
+        "std": 110.51266673358067
+      },
+      "winter storm": {
+        "mean": 0.0076335877862595,
+        "std": 0.1235604126430431
+      },
+      "winter weather": {
+        "mean": 0.1441048034934497,
+        "std": 1.701707787041249
+      }
+    },
+    "summer": {
+      "drought": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "dust devil": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "excessive heat": {
+        "mean": 0.192868719611021,
+        "std": 3.1084427925812745
+      },
+      "flash flood": {
+        "mean": 6.9025678119349,
+        "std": 29.40890519789604
+      },
+      "flood": {
+        "mean": 1.2316176470588236,
+        "std": 4.886738701998727
+      },
+      "funnel cloud": {
+        "mean": 0.0094339622641509,
+        "std": 0.0686802819743445
+      },
+      "hail": {
+        "mean": 0.3276517794836008,
+        "std": 9.953263830280305
+      },
+      "heat": {
+        "mean": 0.2083067092651757,
+        "std": 5.4758299428633
+      },
+      "heavy rain": {
+        "mean": 1.5416666666666667,
+        "std": 9.709193039958548
+      },
+      "high wind": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "lightning": {
+        "mean": 19.875989208633094,
+        "std": 36.92368399689298
+      },
+      "marine high wind": {
+        "mean": 0.5,
+        "std": 0.0
+      },
+      "strong wind": {
+        "mean": 2.905172413793104,
+        "std": 4.374424169174411
+      },
+      "thunderstorm wind": {
+        "mean": 3.3265651600527515,
+        "std": 11.591965945060512
+      },
+      "tornado": {
+        "mean": 39.7382183908046,
+        "std": 74.59318785912447
+      },
+      "tropical storm": {
+        "mean": 5.454545454545454,
+        "std": 5.324939281811423
+      }
+    },
+    "winter": {
+      "astronomical low tide": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "blizzard": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "cold/wind chill": {
+        "mean": 0.4358974358974359,
+        "std": 1.241416150352265
+      },
+      "debris flow": {
+        "mean": 3.8025,
+        "std": 3.7388088566636655
+      },
+      "drought": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "extreme cold/wind chill": {
+        "mean": 0.1553398058252427,
+        "std": 0.8717492168768793
+      },
+      "flash flood": {
+        "mean": 4.844140508221225,
+        "std": 26.094232208231634
+      },
+      "flood": {
+        "mean": 13.887173423423423,
+        "std": 56.42437855803644
+      },
+      "freezing fog": {
+        "mean": 22.75,
+        "std": 78.1805893138095
+      },
+      "funnel cloud": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "hail": {
+        "mean": 0.2835897435897436,
+        "std": 2.1561506225786693
+      },
+      "heavy rain": {
+        "mean": 0.1,
+        "std": 0.6324555320336759
+      },
+      "heavy snow": {
+        "mean": 0.3666338439095551,
+        "std": 5.940875967028176
+      },
+      "high wind": {
+        "mean": 4.530023094688222,
+        "std": 5.821040559376804
+      },
+      "ice storm": {
+        "mean": 4.432835820895522,
+        "std": 21.27207300794498
+      },
+      "lightning": {
+        "mean": 12.5175,
+        "std": 16.763961730546445
+      },
+      "strong wind": {
+        "mean": 3.5675675675675675,
+        "std": 5.538025216150905
+      },
+      "thunderstorm wind": {
+        "mean": 4.39604217603912,
+        "std": 13.902103085968658
+      },
+      "tornado": {
+        "mean": 52.91938432835821,
+        "std": 86.60012960312879
+      },
+      "wildfire": {
+        "mean": 250.0,
+        "std": 0.0
+      },
+      "winter storm": {
+        "mean": 1.6034430225472274,
+        "std": 12.80878144246386
+      },
+      "winter weather": {
+        "mean": 0.4312796208530806,
+        "std": 4.194552062397204
+      }
+    }
+  },
   "edge_failure_probability": {
     "storm": 0.03,
     "heatwave": 0.02,
