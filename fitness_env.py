@@ -189,28 +189,28 @@ class GridFitnessEnv:
     
     #Percentage of power generation lost per storm severity
     def run_trajectory(self, G, trajectory):
-    
+
         weekly_scores = []
-        
+
         for scenario in trajectory:
             G_sim = G.copy()
             event = scenario["event"]
-            severity = scenario['severity']
-        
+            severity = scenario["severity"]
+
             # Apply weather failures
             if severity is not None:
                 self._weather_propigation(G_sim, severity)
 
-            #TODO Propigation to nodes in a realistic manner
-            # Apply cyber attack failures
-            # if self.cyber.attack_occurs():
-            #     for edge in list(G_sim.edges):
-            #         if self.rng.random() < self.cyber.edge_failure_probability:
-            #             G_sim.remove_edge(*edge)
+            # APPLY CYBER ATTACKS
+            self.cyber.step(G_sim)
+
+            # Recalculate power after cyber + weather changes
+            self.initialize_power_serving(G_sim)
 
             # Evaluate power availability
             score = self._evaluate_power(G_sim)
             weekly_scores.append(score)
+
         return sum(weekly_scores) / len(weekly_scores)
     
     #TODO Currently treats each week independently adjust if wanting a time based scenario
