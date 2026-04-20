@@ -2,10 +2,10 @@ import random
 
 class CyberAttackModel:
 
-    def __init__(self, rng=None):
+    def __init__(self, attack_prob = 0.2, rng=None):
         self.rng = rng or random.Random()
 
-        self.attack_probability_per_week = 0.02
+        self.attack_probability_per_week = attack_prob
 
         # attack parameters
         self.beta = 1.5   # load increase factor

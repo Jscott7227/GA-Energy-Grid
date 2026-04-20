@@ -36,7 +36,6 @@ class GridFitnessEnv:
                     severity = None
                     if event is not None:
                         severity = self._sample_severity(season, event)
-                    
                     scenarios.append({
                         "year": year,
                         "week": week,
@@ -72,15 +71,15 @@ class GridFitnessEnv:
             self.weather_config
             .get("seasonal_severity_distribution", {})
             .get(season, {})
-            .get(event)
+            .get(event.lower())
         )
-
+        
         if not dist:
             return None
 
         severity = self.rng.gauss(dist["mean"], dist["std"])
-
-        #[1.0, 10.0]
+        #print(severity)
+        #[1.0, 100.0]
         return max(1.0, min(10.0, severity))
     
     def _edge_failure_prob(self, event):
@@ -92,7 +91,6 @@ class GridFitnessEnv:
         generation_scale = (1 - self.alpha * severity)
         #TODO grab from config
         line_fail_prob = min(1.0, 0.02 * severity)
-        
         supply = 0.0
         demand = 0.0
         visited = set()
@@ -158,6 +156,7 @@ class GridFitnessEnv:
                 
                 # Full Blackout of generator
                 else: 
+                    #print("Full Blackout")
                     G.nodes[node]["power_generated"] = 0.0
 
                     for n in sub_nodes:
@@ -184,7 +183,8 @@ class GridFitnessEnv:
 
             for n in component:
                 if G.nodes[n].get("type") != "generator":
-                    G.nodes[n]["served"] = has_generator
+                    if G.nodes[n]["served"] == True:
+                        G.nodes[n]["served"] = has_generator
     
     #Percentage of power generation lost per storm severity
     def run_trajectory(self, G, trajectory, candidate):
@@ -201,10 +201,10 @@ class GridFitnessEnv:
                 self._weather_propigation(G_sim, severity)
 
             # APPLY CYBER ATTACKS
-            self.cyber.step(G_sim)
+            #self.cyber.step(G_sim)
 
             # Recalculate power after cyber + weather changes
-            self.initialize_power_serving(G_sim)
+            #self.initialize_power_serving(G_sim)
 
             # Evaluate power availability
             
