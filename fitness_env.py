@@ -90,7 +90,7 @@ class GridFitnessEnv:
     def _weather_propigation(self, G, severity, super_failure = 10):
         generation_scale = (1 - self.alpha * severity)
         #TODO grab from config
-        line_fail_prob = min(1.0, 0.02 * severity)
+        line_fail_prob = min(1.0, 0.002 * severity)
         supply = 0.0
         demand = 0.0
         visited = set()
@@ -196,12 +196,12 @@ class GridFitnessEnv:
             event = scenario["event"]
             severity = scenario["severity"]
 
+            # APPLY CYBER ATTACKS
+            self.cyber.step(G_sim)
+
             # Apply weather failures
             if severity is not None:
                 self._weather_propigation(G_sim, severity)
-
-            # APPLY CYBER ATTACKS
-            #self.cyber.step(G_sim)
 
             # Recalculate power after cyber + weather changes
             #self.initialize_power_serving(G_sim)

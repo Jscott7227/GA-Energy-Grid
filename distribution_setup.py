@@ -9,9 +9,9 @@ CONFIG = {
     "node_count": 100,
 
     "node_type_percentages": {
-        "essential": 0.15,
-        "generator": 0.04,
-        "residential": 0.41,
+        "essential": 0.10,
+        "generator": 0.10,
+        "residential": 0.40,
         "commercial": 0.25,
         "substation": 0.15
     },

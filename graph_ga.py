@@ -366,13 +366,18 @@ class GraphGA:
     def run(self, fitness_env, generations=50, edge_prob=0.1,
             mutation_rate=0.05, top_k=3, verbose=1):
         
+        fitness_hist = []
+        elite_hist = []
         self.initialize_population(edge_prob=edge_prob)
         fitness_env.generate_weather_scenarios()
         for c in self.population:
             c.evaluate_fitness(fitness_env)
 
         for gen in range(generations):
+            total_fitness = 0
+            elite_total = 0
             new_population = []
+            
             
             elites, parents = self.select_parents(top_k=top_k)
             new_population.extend(elites)
@@ -386,6 +391,19 @@ class GraphGA:
             fitness_env.generate_weather_scenarios()
             for c in self.population:
                 c.evaluate_fitness(fitness_env)
+                total_fitness += c.fitness
+            
+            #print(fitness_hist)
+            fitness_hist.append(total_fitness/len(self.population))
+            
+            sorted_pop = sorted(self.population, key=lambda c: c.fitness, reverse=True)
+            elites = sorted_pop[:top_k]
+            
+            for elite in elites:
+                elite_total += elite.fitness
+            
+            elite_hist.append(elite_total/len(elites))
+            print(elite_hist)
             
             #Print best fitness
             if verbose:
@@ -400,5 +418,14 @@ class GraphGA:
             if verbose >= 3:
                 rates = best.get_outage_rates()
                 self.plot_graph(best.G, title=f"Generation {gen} Best Graph \n Fitness: {best.fitness:.4f} \n Raw Cost: ${best.raw_cost:.2f}", rates=rates)
-
+                
+        plt.savefig("Final_Best.png")
+        plt.clf()
+        plt.plot(elite_hist)
+        plt.xlabel('Generation')
+        plt.ylabel('Fitness')
+        plt.title('Average Top-5 Fitness Over Generations')
+        plt.savefig("Fitness.png")
+        
+        
         return max(self.population, key=lambda c: c.fitness)
